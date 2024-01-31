@@ -11,7 +11,7 @@ In order to use, you just need to install the dependencies with `pipenv`.
 
 ```
 pip install pipenv
-git clone git@github.com:buzzer-re/ps_scripts.git
+git clone https://github.com/buzzer-re/ps_scripts.git
 cd ps_scripts/sprx2dll
 pipenv shell && pipenv sync
 ```
