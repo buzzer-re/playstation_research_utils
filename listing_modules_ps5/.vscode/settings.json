@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "proc.h": "c",
+        "freebsd-helper.h": "c",
+        "types.h": "c",
+        "kernel.h": "c",
+        "syscall.h": "c",
+        "ucred.h": "c",
+        "payload.h": "c"
+    }
+}

@@ -14,7 +14,7 @@ def log(msg: str):
 DLL_START_NID = "Tkla3v2SbEs#C#A" 
 
 if __name__ == '__main__':
-    lief.logging.set_level(lief.logging.LOGGING_LEVEL.CRITICAL) # Disable warning
+    lief.logging.set_level(lief.logging.LEVEL.CRITICAL) # Disable warning
 
     parser = argparse.ArgumentParser("sprx2dll", "Extract embedded DLL files from PS5 SPRX (Signed Shared Library) files")
     parser.add_argument("SPRX")

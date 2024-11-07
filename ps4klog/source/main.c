@@ -38,7 +38,7 @@ void eternal_read(int fd)
         return;
     }
 
-    printf_notification("Waiting connections...");
+    printf_notification("PS4KLOG: Waiting connections on port %d...", LISTEN_PORT);
     while (1)
     {
         conn = sceNetAccept(socket, NULL, NULL);
@@ -74,9 +74,7 @@ int _main()
     initLibc();
     jailbreak();
     initSysUtil();
-    initNetwork();
-    
-    
+    initNetwork();    
     //
     // Detach for the loader process
     //
