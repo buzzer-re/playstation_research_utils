@@ -121,6 +121,7 @@ module_info_t* get_module_handle(pid_t pid, const char* module_name)
         }
 
         free(mod_info);
+        mod_info = NULL;
 
 free_handles:
         free(handles);
