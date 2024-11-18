@@ -102,13 +102,13 @@ module_info_t* get_module_handle(pid_t pid, const char* module_name)
 {
     size_t num_handles = 0;
     syscall(SYS_dl_get_list, pid, NULL, 0, &num_handles);
-    
+    module_info_t* mod_info = NULL;
     if (num_handles)
     {
         uintptr_t* handles = (uintptr_t*) calloc(num_handles, sizeof(uintptr_t));
         syscall(SYS_dl_get_list, pid, handles, num_handles, &num_handles);
 
-        module_info_t* mod_info = (module_info_t*) malloc(sizeof(module_info_t));
+        mod_info = (module_info_t*) malloc(sizeof(module_info_t));
         
         for (int i = 0; i < num_handles; ++i)
         {
@@ -116,15 +116,17 @@ module_info_t* get_module_handle(pid_t pid, const char* module_name)
             syscall(SYS_dl_get_info_2, pid, 1, handles[i], mod_info);
             if (!strcmp(mod_info->filename, module_name))
             {
-                return mod_info;
+                goto free_handles;
             }
         }
-        
-        free(handles);
+
         free(mod_info);
+
+free_handles:
+        free(handles);
     }
 
-    return NULL;
+    return mod_info;
 }
 
 
