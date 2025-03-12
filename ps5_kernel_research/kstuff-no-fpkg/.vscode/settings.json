@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "utils.h": "c",
+        "syscall_fixes.h": "c",
+        "fself.h": "c",
+        "log.h": "c"
+    }
+}

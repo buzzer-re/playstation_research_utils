@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "utils.h": "c",
+        "log.h": "c",
+        "compare": "c",
+        "cstdint": "c"
+    }
+}

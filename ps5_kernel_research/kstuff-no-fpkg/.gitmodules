@@ -1,0 +1,24 @@
+[submodule "linux/ps4-kexec-672"]
+	path = linux/ps4-kexec-672
+	url = https://github.com/sleirsgoevy/ps4-kexec
+[submodule "linux/ps4-kexec-702"]
+	path = linux/ps4-kexec-702
+	url = https://github.com/sleirsgoevy/ps4-kexec
+[submodule "linux/ps4-kexec-755"]
+	path = linux/ps4-kexec-755
+	url = https://github.com/sleirsgoevy/ps4-kexec
+[submodule "bgft/ps4-libjbc"]
+	path = bgft/ps4-libjbc
+	url = https://github.com/sleirsgoevy/ps4-libjbc
+[submodule "jbc_loader/ps4-libjbc"]
+	path = jbc_loader/ps4-libjbc
+	url = https://github.com/sleirsgoevy/ps4-libjbc
+[submodule "linux/ps4-kexec-900"]
+	path = linux/ps4-kexec-900
+	url = https://github.com/sleirsgoevy/ps4-kexec
+[submodule "ps5-kstuff/BearSSL"]
+	path = ps5-kstuff/BearSSL
+	url = https://www.bearssl.org/git/BearSSL
+[submodule "ps5-kstuff/libtomcrypt"]
+	path = ps5-kstuff/libtomcrypt
+	url = https://github.com/libtom/libtomcrypt

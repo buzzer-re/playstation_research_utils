@@ -1,0 +1,77 @@
+# offsets
+p "data is for cpu 0"
+p/x $gdt = kdata_base + 0x64cee30
+p/x $idt = kdata_base + 0x64cdc80
+p/x $tss = kdata_base + 0x64d0830
+p/x $tss13 = $tss + 13 * 0x68
+p/x $iret = kdata_base - 0x9cf84c
+p/x $ret = kdata_base - 0x28a3a0
+p/x $pcpu13 = kdata_base + 0x64d9780
+p/x $lstar = kdata_base - 0x96bde8
+p/x $syscalls = kdata_base + 0x1709c0
+p/x $sysentvec = kdata_base + 0xd11bb8
+p/x $int244 = kdata_base - 0x96be70
+p/x $popctx_iret = $iret - 0x5f
+p/x $rdmsr = kdata_base - 0x9d0cfa
+p/x $wrmsr = kdata_base - 0x9cf8bb
+p/x $rep_movsb_pop_rbp_ret = kdata_base - 0x990a55
+p/x $mov_rdi_cr3 = kdata_base - 0x39700e
+p/x $mov_cr3_rax = kdata_base - 0x396f9e
+p/x $int_0x7e = kdata_base - 0x63fa92
+p/x $justreturn = kdata_base - 0x9cf990
+p/x $justreturn_pop = kdata_base - 0x9cf988
+p/x $wrmsr_ret = kdata_base - 0x9d20cc
+
+p/x $malloc = kdata_base - 0xa9b00
+p/x $M_something = kdata_base + 0x1346080
+p/x $cpu_switch = kdata_base - 0x9d6f80
+
+p/x $printf = kdata_base - 0x972588
+p/x $panic = kdata_base - 0x21020
+
+# 6 instructions
+p/x $cpu_switch_dr2gpr = kdata_base - 0x9d6d93
+
+# 9 instructions
+p/x $cpu_switch_gpr2dr = kdata_base - 0x9d6c7a
+
+# mailbox
+p/x $sceSblServiceMailbox = kdata_base - 0x6824c0
+
+# mailbox calls
+p/x $sceSblAuthMgrSmFinalize = kdata_base - 0x8a5d40
+p/x $sceSblAuthMgrSmFinalize_call_mailbox = kdata_base - 0x8a5cc3
+
+p/x $authmgr_verifyHeader = kdata_base - 0x8a5a40
+p/x $authmgr_verifyHeader_call_mailbox = kdata_base - 0x8a58c1
+
+p/x $sceSblAuthMgrIsLoadable2 = kdata_base - 0x8a5c40
+p/x $sceSblAuthMgrIsLoadable2_call_mailbox = kdata_base - 0x8a5b27
+
+p/x $authmgr_loadSelfSegment = kdata_base - 0x8a5780
+p/x $authmgr_loadSelfSegment_call_mailbox = kdata_base - 0x8a5546
+
+p/x $authmgr_decryptSelfBlock = kdata_base - 0x8a5410
+p/x $authmgr_decryptSelfBlock_call_mailbox = kdata_base - 0x8a5019
+
+p/x $authmgr_decryptMultipleSelfBlocks_call_mailbox = kdata_base - 0x8a4891
+
+p/x $sceSblPfsClearKey_call_mailbox_1 = kdata_base - 0x94ada9
+p/x $sceSblPfsClearKey_call_mailbox_2 = kdata_base - 0x94ad33
+
+p/x $sceSblPfsSetKeys = kdata_base - 0x94aaa0
+p/x $verifySuperBlock_call_mailbox = kdata_base - 0x94a7f5
+p/x $pfsunknown1_call_mailbox = kdata_base - 0x94a74f
+p/x $pfsunknown2_call_mailbox = kdata_base - 0x94a71b
+p/x $unloadPfsmgrSecureModule_call_mailbox = kdata_base - 0x229b7b
+p/x $registerMountKey = kdata_base - 0x8173c0
+p/x $registerMountKey_caller = kdata_base - 0x94b150
+p/x $registerMountKey_call_site = kdata_base - 0x94b0e3
+p/x $sceSblServiceCryptAsync = kdata_base - 0x8ed940
+p/x $sceSblPfsClearKey = kdata_base - 0x229c80
+
+p/x $crypt_request_start = kdata_base - 0x479e20
+p/x $crypt_message_resolve = kdata_base - 0x479d60
+p/x $crypt_get_algo_singleton = kdata_base - 0x410830
+p/x $crypt_singleton_array = kdata_base + 0x2e31830
+p/x $sceSblServiceCryptAsync_deref_singleton = kdata_base - 0x8ed902
