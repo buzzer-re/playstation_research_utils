@@ -4,7 +4,7 @@ This is a copy of [Kstuff](https://github.com/sleirsgoevy/ps4jb-payloads/tree/bd
 
 Currently:
 
-1 - ASLR disabled for versions 5.0 and 4.03, achieved in the same way as the mprotect_fix patch.
+- ASLR [disabled](https://github.com/buzzer-re/playstation_research_utils/blob/787054ada7b54f2e2cfabd96ee03d2bf53d83397/ps5_kernel_research/kstuff-no-fpkg/ps5-kstuff/uelf/syscall_fixes.c#L25) for versions 5.0 and 4.03, achieved in the same way as the mprotect_fix patch
 
 
 ## Build
@@ -15,9 +15,10 @@ Use the latest release from the [SDK](https://github.com/ps5-payload-dev/sdk):
 
 This will generate a file named `kstuff.elf`.
 
+To learn more about kstuff working, refer to [OnOffsets.md](https://gist.github.com/sleirsgoevy/26c482553b9fa604dd9b8ba7dfe654d6)
 
 Todo:
 
-1 - Rewrite the initial loader with well defined types
-2 - Extend kstuff to support "modules" 
-3 - Docs on how debug it with gdb
+- Rewrite the initial loader with well defined types
+- Extend kstuff to support "modules" 
+- Docs on how debug it with gdb
