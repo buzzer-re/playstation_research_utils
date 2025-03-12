@@ -8,10 +8,12 @@ Currently:
 
 
 ## Build
-Use the latest release from the [SDK](https://github.com/ps5-payload-dev/sdk):
+Use the latest release from the [Pacbrew SDK release](https://github.com/ps5-payload-dev/pacbrew-repo/releases/tag/v0.20), which includes an already built `sqlite` library.
 
-`cd ps5-kstuff-ldr`
-`make clean && make`
+```
+cd ps5-kstuff-ldr
+make clean && make
+```
 
 This will generate a file named `kstuff.elf`.
 
