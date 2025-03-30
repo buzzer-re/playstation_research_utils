@@ -7,12 +7,48 @@
 #include "traps.h"
 #include "utils.h"
 
+
 extern char syscall_after[];
 extern char doreti_iret[];
 extern char nop_ret[];
 extern char copyout[];
 extern char copyin[];
+extern char kmem_alloc[];
+extern char kernel_vmmap[];
+extern char malloc[];
+extern char M_something[];
+extern char kproc_create[];
+extern char malloc_arena_fix_start[];
+extern char malloc_arena_fix_end[];
+extern char kmem_alloc_rwx_fix[];
+
 extern struct sysent sysents[];
+
+static uint64_t dbgregs_for_kfunction_fixes[6] = {
+    (uint64_t)malloc_arena_fix_start, (uint64_t)kmem_alloc_rwx_fix,
+    (uint64_t) 0, 0,
+    0, 0x405,
+};
+
+
+int try_handle_kernel_fix_trap(uint64_t* regs)
+{
+    if (regs[RIP] == (uint64_t) malloc_arena_fix_start)
+    {
+        regs[RIP] = (uint64_t) malloc_arena_fix_end;
+        return 1;
+    }
+    else if (regs[RIP] == (uint64_t) kmem_alloc_rwx_fix)
+    {
+        // CRASH();
+        regs[RCX] = 7;
+        regs[RIP] += 5;
+        return 1;
+    }
+
+    return 0;
+}
+
 
 int handle_kekcall(uint64_t* regs, uint64_t* args, uint32_t nr)
 {
@@ -37,6 +73,9 @@ int handle_kekcall(uint64_t* regs, uint64_t* args, uint32_t nr)
     }
     else if(nr == 2)
     {
+        //
+        // Copyin
+        //
         uint64_t stack_frame[14] = {(uint64_t)doreti_iret, MKTRAP(TRAP_KEKCALL, 1), [12] = regs[RDI]};
         push_stack(regs, stack_frame, sizeof(stack_frame));
         regs[RDI] = args[RDI];
@@ -61,6 +100,40 @@ int handle_kekcall(uint64_t* regs, uint64_t* args, uint32_t nr)
         regs[RDX] = 48;
         regs[RIP] = (uint64_t)copyin;
     }
+    else if (nr == 6)
+    {
+        //
+        // mem_alloc with rwx
+        //
+        kpoke64(regs[RDI]+td_retval, 0);
+        regs[RDI] = 0x4000;
+        regs[RSI] = (uint64_t) M_something;
+        regs[RDX] = 0x1;
+        regs[RIP] = (uint64_t) malloc;
+        // regs[RDI] =  kpeek64((uintptr_t) kernel_vmmap);
+        // regs[RSI] = 0x4000;
+        // // regs[RDX] = 0x102;
+        // regs[RDX] = 0x2;
+        // regs[RIP] = (uint64_t) kmem_alloc;
+         
+        start_syscall_with_dbgregs(regs, dbgregs_for_kfunction_fixes);
+    } 
+    else if (nr == 7)
+    {
+        // kproc_create
+        kpoke64(regs[RDI]+td_retval, 0);
+        regs[RDI] = args[RDI];
+        regs[RSI] = args[RSI];
+        regs[RDX] = 0;
+        regs[RCX] = 0;
+        regs[R8] = 0;
+        regs[R9] = 0;
+        kpoke64(regs[RSP] + 0x10, args[RDX]);
+        
+        regs[RIP] = (uint64_t) kproc_create;
+
+    }
+    
     else if(nr == 0xffffffff)
     {
         args[RAX] = 0;

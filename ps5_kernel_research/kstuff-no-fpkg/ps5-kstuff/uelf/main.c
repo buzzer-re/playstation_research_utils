@@ -114,7 +114,10 @@ from_userspace:
 
     else if(handle_syscall_parasites(regs))
         return;
-    
+
+    else if (try_handle_kernel_fix_trap(regs))
+        return;
+        
     else if(regs[RIP] == (uint64_t)syscall_before)
     {
         regs[RAX] |= 0xffffull << 48;
@@ -144,7 +147,6 @@ from_userspace:
     
     else if(try_handle_syscall_fix_trap(regs))
         return;
-   
     else
     {
         int decrypted = 0;
