@@ -106,10 +106,10 @@ int handle_kekcall(uint64_t* regs, uint64_t* args, uint32_t nr)
     else if (nr == 6)
     {
         //
-        // mem_alloc with rwx
+        // malloc with rwx
         //
         kpoke64(regs[RDI]+td_retval, 0);
-        regs[RDI] = 0x4000;//ROUND_PG(args[RDI]);
+        regs[RDI] = args[RDI];
         regs[RSI] = (uint64_t) M_something;
         regs[RDX] = 0x1;
         regs[RIP] = (uint64_t) malloc;
