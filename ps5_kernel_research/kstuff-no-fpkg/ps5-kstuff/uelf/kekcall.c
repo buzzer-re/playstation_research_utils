@@ -30,18 +30,21 @@ static uint64_t dbgregs_for_kfunction_fixes[6] = {
     0, 0x405,
 };
 
+#define PS5_PAGE_SIZE 0x4000
+#define ROUND_PG(x) (((x) + (PS5_PAGE_SIZE - 1)) & ~(PS5_PAGE_SIZE - 1))
+
 
 int try_handle_kernel_fix_trap(uint64_t* regs)
 {
     if (regs[RIP] == (uint64_t) malloc_arena_fix_start)
     {
+        // pretend that the system does not have memory backed, will make it ask for more
         regs[RIP] = (uint64_t) malloc_arena_fix_end;
         return 1;
     }
     else if (regs[RIP] == (uint64_t) kmem_alloc_rwx_fix)
     {
-        // CRASH();
-        regs[RCX] = 7;
+        regs[RCX] = 7; // rwx
         regs[RIP] += 5;
         return 1;
     }
@@ -106,16 +109,11 @@ int handle_kekcall(uint64_t* regs, uint64_t* args, uint32_t nr)
         // mem_alloc with rwx
         //
         kpoke64(regs[RDI]+td_retval, 0);
-        regs[RDI] = 0x4000;
+        regs[RDI] = 0x4000;//ROUND_PG(args[RDI]);
         regs[RSI] = (uint64_t) M_something;
         regs[RDX] = 0x1;
         regs[RIP] = (uint64_t) malloc;
-        // regs[RDI] =  kpeek64((uintptr_t) kernel_vmmap);
-        // regs[RSI] = 0x4000;
-        // // regs[RDX] = 0x102;
-        // regs[RDX] = 0x2;
-        // regs[RIP] = (uint64_t) kmem_alloc;
-         
+
         start_syscall_with_dbgregs(regs, dbgregs_for_kfunction_fixes);
     } 
     else if (nr == 7)
