@@ -26,7 +26,7 @@ void* (*kernel_dynlib_dlsym)(int pid, unsigned int handle, const char* sym) = NU
 int (*f_usleep)(unsigned int usec) = NULL;
 int (*printf)(const char* fmt, ...) = NULL;
 
-#define sleepy_printf(fmt, ...) do { printf(fmt, ##__VA_ARGS__); f_usleep(100* 1000); } while(0)
+#define sleepy_printf(fmt, ...) do { /*printf(fmt, ##__VA_ARGS__); f_usleep(100* 1000);*/ } while(0)
 
 #ifndef PS5KEK
 
@@ -993,6 +993,40 @@ static void getpid_to_fncall(uint64_t* regs)
     }
 }
 
+
+
+static void kalloc_jit_shim(uint64_t* regs) {
+    SKIP_SCHEDULER
+    //printf("Checking %#02llx\n", regs[0]);
+    if (regs[0] == sys_getpid) {
+        regs[0] = fncall_fn;
+        regs[12] = fncall_args[0];
+        regs[11] = fncall_args[1];
+        regs[7] = fncall_args[2];
+        regs[6] = fncall_args[3];
+        regs[13] = fncall_args[4];
+        regs[14] = fncall_args[5];
+        if (fncall_no_untrace){
+            regs[3] -= 8;
+            kmemcpy((void*)regs[3], &regs[0], 8);
+            regs[0] = offsets.nop_ret;
+        } else {
+            // untrace_fn(regs);
+        }
+    } else if (regs[0] == offsets.syscall_after) {
+        //printf("syscall_after...\n");
+        fncall_ans = regs[5];
+        regs[5] = 0;
+        regs[2] &= -257; // rflags &= ~0x100 (TF)
+    } else {
+        // if (RCX == 3 && R8 == 0x203)
+        if (regs[6] == 3 && regs[13] == 0x203) {
+            regs[6] = 7;
+            // regs[13] = 0x207;
+        }
+    }
+}
+
 uint64_t r0gdb_kfncall(uint64_t fn, ...)
 {
     va_list args;
@@ -1008,14 +1042,38 @@ uint64_t r0gdb_kfncall(uint64_t fn, ...)
         kmemcpy(&sys_getpid, (void*)(offsets.sysents + 48*SYS_getpid + 8), 8);
     set_trace();
     p_getpid();
+
     return fncall_ans;
 }
 
+uint64_t r0gdb_kmem_alloc(size_t sz) {
+    fncall_args[0] = sz;
+    fncall_fn = offsets.kmem_alloc; // kmem_alloc
+    r0gdb_instrument(0);
+    void(*p_getpid)(void) = WRAPPER(getpid);
+    trace_prog = kalloc_jit_shim;
+    if(!sys_getpid)
+        kmemcpy(&sys_getpid, (void*)(offsets.sysents + 48*SYS_getpid + 8), 8);
+    set_trace();
+    p_getpid();
+    // trace_prog = 0;
+
+    return fncall_ans;
+}
+
+uint64_t r0gdb_kproc_create(uint64_t kfn, uint64_t kthread_args, uint64_t kproc_name)
+{
+    return r0gdb_kfncall(offsets.kproc_create, kfn, kthread_args, 0, 0, 0, 0, kproc_name);
+}
+
+
 uint64_t r0gdb_kmalloc(size_t sz)
 {
-    //return r0gdb_kfncall(offsets.malloc, sz, offsets.M_something, 2 /* M_WAITOK */);
-    return r0gdb_kfncall(offsets.malloc, sz, offsets.M_something, 1 /* M_NOWAIT */);
+    return r0gdb_kfncall(offsets.malloc, sz, offsets.M_something, 2 /* M_WAITOK */);
+    // return r0gdb_kmem_alloc(sz);
+    // return r0gdb_kfncall(offsets.malloc, sz, offsets.M_something, 1 /* M_NOWAIT */);
 }
+
 
 static uint64_t instr_start;
 static uint64_t instr_jump;

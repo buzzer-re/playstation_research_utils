@@ -18,8 +18,9 @@ extern void* (*kernel_dynlib_dlsym)(int pid, unsigned int handle, const char* sy
 extern int (*f_usleep)(unsigned int usec);
 extern int (*printf)(const char* fmt, ...);
 
-#define sleepy_printf(fmt, ...) do { printf(fmt, ##__VA_ARGS__); f_usleep(100* 1000); } while(0)
+#define sleepy_printf(fmt, ...) do { /*printf(fmt, ##__VA_ARGS__); f_usleep(100* 1000);*/ } while(0)
 
+#define PS5_KSTUFF_LDR_BASE 0x0000000926100000
 
 void* dlsym(void*, const char*);
 
@@ -903,7 +904,20 @@ uint64_t bench(void)
     return rdtsc() - start;
 }
 
-int main(void* ds, int a, int b, uintptr_t c, uintptr_t d, void* (*t_kernel_dynlib_dlsym)(int pid, unsigned int handle, const char* sym))
+typedef struct __r0gdb_functions
+{
+    int (*r0gdb_init_ptr)(void* ds, int a, int b, uintptr_t c, uintptr_t d);
+    uint64_t (*r0gdb_kmalloc)(size_t sz);
+    uint64_t (*r0gdb_kmem_alloc)(size_t sz);
+    uint64_t (*r0gdb_kfncall)(uint64_t fn, ...);
+    uint64_t (*r0gdb_kproc_create)(uint64_t kfn, uint64_t kthread_args, uint64_t kproc_name);
+} __attribute__((__packed__)) r0gdb_functions;
+
+
+ // base used on ps5-kstuff-ldr;
+#define MAKE_ADDR(addr) PS5_KSTUFF_LDR_BASE | ((uint64_t) addr & 0x1fff)
+
+int main(void* ds, int a, int b, uintptr_t c, uintptr_t d, void* (*t_kernel_dynlib_dlsym)(int pid, unsigned int handle, const char* sym), void* r0_table)
 {
     kernel_dynlib_dlsym = t_kernel_dynlib_dlsym;
     f_usleep = kernel_dynlib_dlsym(-1, 0x1, "usleep");
@@ -911,6 +925,17 @@ int main(void* ds, int a, int b, uintptr_t c, uintptr_t d, void* (*t_kernel_dynl
     
     sleepy_printf("before r0gdb_init\n");
 
+    if (r0_table)
+    {
+        r0gdb_functions* r0gdb_table = (r0gdb_functions*) r0_table;
+        r0gdb_table->r0gdb_init_ptr = (void*) (MAKE_ADDR(r0gdb_init));
+        r0gdb_table->r0gdb_kmalloc = (void*) (MAKE_ADDR(r0gdb_kmalloc));
+        r0gdb_table->r0gdb_kfncall = (void*) (MAKE_ADDR(r0gdb_kfncall));
+        r0gdb_table->r0gdb_kproc_create = (void*) (MAKE_ADDR(r0gdb_kproc_create));
+        r0gdb_table->r0gdb_kmem_alloc = (void*) (MAKE_ADDR(r0gdb_kmem_alloc));
+        
+        return 1;
+    }
 
     if(r0gdb_init(ds, a, b, c, d))
     {
