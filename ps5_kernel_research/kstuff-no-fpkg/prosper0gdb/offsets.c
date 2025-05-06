@@ -428,9 +428,9 @@ DEF(security_flags, 0x6466474)
 DEF(targetid, 0x646647d)
 DEF(qa_flags, 0x6466498)
 DEF(utoken, 0x6466500)
-DEF(kmem_alloc, 0);
 DEF(kernel_vmmap, 0)
-DEF(kproc_create, 0)
+DEF(kmem_alloc, -0xC25E0)
+DEF(kproc_create, -0x3565A0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
@@ -953,9 +953,9 @@ DEF(security_flags, 0x66466ec) //data 0x72866EC
 DEF(targetid, 0x66466f5) //data 0x72866F5
 DEF(qa_flags, 0x6646710) //data 0x7286710
 DEF(utoken, 0x6646778) //data 0x7286778
-DEF(kmem_alloc, 0);
 DEF(kernel_vmmap, 0)
-DEF(kproc_create, 0)
+DEF(kmem_alloc, -0xCD1E0)
+DEF(kproc_create, -0x372460)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
