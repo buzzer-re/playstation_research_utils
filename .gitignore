@@ -1,1 +1,4 @@
 *.elf
+*.o
+*.bin
+uelf
