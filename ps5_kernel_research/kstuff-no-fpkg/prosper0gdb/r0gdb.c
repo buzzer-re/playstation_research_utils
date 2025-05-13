@@ -294,63 +294,133 @@ uint64_t iret;
 extern char _start[];
 extern char _end[];
 
+char saved_idt_gate_1[16];
+char saved_idt_gate_6[16];
+char saved_idt_gate_9[16];
+char saved_idt_gate_179[16];
+char saved_utss[16][0x68];  // one for each CPU (assuming 16 max)
+char saved_utss_2[16][0x68];  // one for each CPU (assuming 16 max)
+
+uint64_t gadget_stack = 0;
+uint64_t kstack = 0;
+uint64_t kframe = 0;
+uint64_t uretframe = 0;
+// int iret = 0;
+static int init_run = 0;
+
+void* memset(void* ptr, int value, size_t num) {
+    unsigned char* p = (unsigned char*)ptr;
+    for (size_t i = 0; i < num; ++i) {
+        p[i] = (unsigned char)value;
+    }
+    return ptr;
+}
+
+
+void r0gdb_teardown()
+{
+    static int teardown_run = 0;
+    if (teardown_run)
+        return;
+
+    teardown_run = 1;
+
+    // Step 1: Unlock memory region
+    munlock(_start, _end - _start);
+
+    // Step 2: Reset the IDT gates modified
+    char empty_gate[16] = {0};
+    copyin(offsets.idt + 1 * 16, saved_idt_gate_1, 16);
+    copyin(offsets.idt + 9 * 16, saved_idt_gate_9, 16);
+    copyin(offsets.idt + 179 * 16, saved_idt_gate_179, 16);
+    // if (*(int*)&do_swapgs == 2)
+    //     copyin(offsets.idt + 6 * 16, empty_gate, 16);
+
+    // Step 3: Restore TSS stack pointers
+    for (int cpu = 0; cpu < 16; cpu++) {
+        uint64_t tss_for_cpu = offsets.tss_array + cpu * 0x68;
+        char utss[0x68] = {0};
+        copyout(utss, tss_for_cpu, 0x68);
+        // Assuming original values were saved elsewhere, we restore them
+        // This would be more correct with saved state
+        memset(utss + 0x34, 0, 8);  // Clear rsp0
+        memset(utss + 0x3c, 0, 8);  // Clear rsp1
+        memset(utss + 0x4c, 0, 8);  // Clear rsp2
+        copyin(tss_for_cpu, saved_utss[cpu], 0x68);
+    }
+
+    // Step 4: Free the gadget stack memory
+    if (gadget_stack)
+        kfree(gadget_stack);
+
+    // Step 5: Reset CPU affinity if needed (Optional, since the OS might reset it on exit)
+#ifdef CPU_2
+    char affinity_reset[16] = {1}; // CPU 0
+    cpuset_setaffinity(3, 1, gettid(), 16, (void*)affinity_reset);
+#endif
+
+    // Step 6: Reset global/static flags
+    init_run = 0;
+}
+
 void r0gdb_setup(int do_swapgs)
 {
-    static int init_run = 0;
-    if(init_run)
+    
+    if (init_run)
         return;
-    //mlock all our code & data
-    mlock(_start, _end-_start);
-    for(size_t i = 0; i < _end-_start; i += 4096)
-        *(volatile char*)(_start+i);
+
+    mlock(_start, _end - _start);
+    for (size_t i = 0; i < _end - _start; i += 4096)
+        *(volatile char*)(_start + i);
+
 #ifdef CPU_2
-    //pin ourselves to cpu 2 (13 in apic order)
-    char affinity[16] = {4};
+    char affinity[16] = {4}; // pin to CPU 2 (13)
     cpuset_setaffinity(3, 1, gettid(), 16, (void*)affinity);
 #endif
-    //resolve addresses
+
+    // Save offsets
     iret = offsets.doreti_iret;
     volatile uint64_t add_rsp_0xe8_iret = offsets.add_rsp_iret;
     volatile uint64_t swapgs_add_rsp_0xe8_iret = offsets.swapgs_add_rsp_iret;
-    //set up alternative stacks on all cpus
-    uint64_t gadget_stack = kmalloc(2048);
-#ifdef CPU_2
-    int cpu = 13;
-#else
-    for(int cpu = 0; cpu < 16; cpu++)
-#endif
-    {
-        uint64_t tss_for_cpu = offsets.tss_array + cpu * 0x68;
-        char utss[0x68];
-        copyout(utss, tss_for_cpu, 0x68);
-        if(cpu == 13)
-            kstack = *(volatile uint64_t*)(utss+0x3c) - 0x28;
-        *(volatile uint64_t*)(utss+0x34) = gadget_stack + 0xe0;
-        *(volatile uint64_t*)(utss+0x3c) = gadget_stack + 0x1f0;
-        *(volatile uint64_t*)(utss+0x4c) = gadget_stack + 0x440;
-        copyin(tss_for_cpu, utss, 0x68);
-    }
+
+    // Allocate gadget stack
+    gadget_stack = kmalloc(2048);  // SAVE this globally for teardown
     uint64_t tframe = gadget_stack + 0x1a0;
     kframe = gadget_stack + 0x1c8;
     uretframe = gadget_stack + 0x2b0;
-    //set up trampoline frame
-    kwrite20(tframe, iret, 0x20, 0);
-    kwrite20(tframe+16, 2, kframe, 0);
-    //set up int179 frames
-#ifdef MEMRW_FALLBACK
-    if(!offsets.rep_movsb_pop_rbp_ret)
-    {
-        kwrite20(gadget_stack+0x500, iret, 0x20, 0);
-        kwrite20(gadget_stack+0x510, 0x40002, gadget_stack+0x418, 0);
+
+    // Store original TSS stack values for all CPUs
+    for (int cpu = 0; cpu < 16; cpu++) {
+        uint64_t tss_for_cpu = offsets.tss_array + cpu * 0x68;
+        copyout(saved_utss[cpu], tss_for_cpu, 0x68); // SAVE ORIGINAL
+        copyout(saved_utss_2[cpu], tss_for_cpu, 0x68);
+        char* utss = saved_utss_2[cpu];  // reuse as modifiable copy
+        if (cpu == 13)
+            kstack = *(volatile uint64_t*)(utss + 0x3c) - 0x28;
+
+        *(volatile uint64_t*)(utss + 0x34) = gadget_stack + 0xe0;
+        *(volatile uint64_t*)(utss + 0x3c) = gadget_stack + 0x1f0;
+        *(volatile uint64_t*)(utss + 0x4c) = gadget_stack + 0x440;
+        copyin(tss_for_cpu, utss, 0x68);
     }
-    else
+
+    // Set trampoline frame
+    kwrite20(tframe, iret, 0x20, 0);
+    kwrite20(tframe + 16, 2, kframe, 0);
+
+#ifdef MEMRW_FALLBACK
+    if (!offsets.rep_movsb_pop_rbp_ret) {
+        kwrite20(gadget_stack + 0x500, iret, 0x20, 0);
+        kwrite20(gadget_stack + 0x510, 0x40002, gadget_stack + 0x418, 0);
+    } else
 #endif
     {
-        kwrite20(gadget_stack+0x408, 0, iret, 0);
-        kwrite20(gadget_stack+0x500, offsets.rep_movsb_pop_rbp_ret, 0x20, 0);
-        kwrite20(gadget_stack+0x510, 0x40002, gadget_stack+0x408, 0);
+        kwrite20(gadget_stack + 0x408, 0, iret, 0);
+        kwrite20(gadget_stack + 0x500, offsets.rep_movsb_pop_rbp_ret, 0x20, 0);
+        kwrite20(gadget_stack + 0x510, 0x40002, gadget_stack + 0x408, 0);
     }
-    //set up gates
+
+    // Prepare IDT gate replacement
     volatile char* addr = do_swapgs ? (void*)&swapgs_add_rsp_0xe8_iret : (void*)&add_rsp_0xe8_iret;
     char gate[16] = {0};
     gate[0] = addr[0];
@@ -364,14 +434,25 @@ void r0gdb_setup(int do_swapgs)
     gate[9] = addr[5];
     gate[10] = addr[6];
     gate[11] = addr[7];
-    copyin(offsets.idt+1*16, gate, 16);
-    if(do_swapgs == 2)
-        copyin(offsets.idt+6*16, gate, 16);
+
+    // Save and replace IDT gates
+    copyout(saved_idt_gate_1, offsets.idt + 1 * 16, 16);
+    copyin(offsets.idt + 1 * 16, gate, 16);
+
+    if (do_swapgs == 2) {
+        copyout(saved_idt_gate_6, offsets.idt + 6 * 16, 16);
+        copyin(offsets.idt + 6 * 16, gate, 16);
+    }
+
     gate[4] = 3;
     gate[5] = 0xee;
-    copyin(offsets.idt+9*16, gate, 16);
+    copyout(saved_idt_gate_9, offsets.idt + 9 * 16, 16);
+    copyin(offsets.idt + 9 * 16, gate, 16);
+
     gate[4] = 6;
-    copyin(offsets.idt+179*16, gate, 16);
+    copyout(saved_idt_gate_179, offsets.idt + 179 * 16, 16);
+    copyin(offsets.idt + 179 * 16, gate, 16);
+
     init_run = 1;
 }
 
@@ -1057,7 +1138,7 @@ uint64_t r0gdb_kmem_alloc(size_t sz) {
     set_trace();
     p_getpid();
     // trace_prog = 0;
-
+    // r0gdb_teardown();
     return fncall_ans;
 }
 

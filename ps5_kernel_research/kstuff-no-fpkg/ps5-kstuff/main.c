@@ -931,7 +931,7 @@ int main(void* ds, int a, int b, uintptr_t c, uintptr_t d, void* (*t_kernel_dynl
         r0gdb_table->r0gdb_init_ptr = (void*) (MAKE_ADDR(r0gdb_init));
         r0gdb_table->r0gdb_kmalloc = (void*) (MAKE_ADDR(r0gdb_kmalloc));
         r0gdb_table->r0gdb_kfncall = (void*) (MAKE_ADDR(r0gdb_kfncall));
-        // r0gdb_table->r0gdb_kproc_create = (void*) (MAKE_ADDR(r0gdb_kproc_create));
+        r0gdb_table->r0gdb_kproc_create = (void*) (MAKE_ADDR(r0gdb_kproc_create));
         r0gdb_table->r0gdb_kmem_alloc = (void*) (MAKE_ADDR(r0gdb_kmem_alloc));
         
         return 1;

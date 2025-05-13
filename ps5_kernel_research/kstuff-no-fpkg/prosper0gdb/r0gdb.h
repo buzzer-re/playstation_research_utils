@@ -82,11 +82,14 @@ uint64_t r0gdb_kfncall(uint64_t kfn, ...);
 uint64_t r0gdb_kmalloc(size_t sz);
 
 //kernel kmem_alloc via function call
-
 uint64_t r0gdb_kmem_alloc(size_t sz);
+
+//kernel kproc_create via function call
+uint64_t r0gdb_kproc_create(uint64_t kfn, uint64_t kthread_args, uint64_t kproc_name);
 
 //get current firmware version
 uint32_t r0gdb_get_fw_version(void);
+
 
 /* internals */
 
