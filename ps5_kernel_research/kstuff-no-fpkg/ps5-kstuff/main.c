@@ -923,10 +923,11 @@ int main(void* ds, int a, int b, uintptr_t c, uintptr_t d, void* (*t_kernel_dynl
     f_usleep = kernel_dynlib_dlsym(-1, 0x1, "usleep");
     printf = kernel_dynlib_dlsym(-1, 0x2, "printf");
     
-    sleepy_printf("before r0gdb_init\n");
+    // printf("before r0gdb_init\n");
 
     if (r0_table)
     {
+        // printf("r0_table: %p\n", r0_table);
         r0gdb_functions* r0gdb_table = (r0gdb_functions*) r0_table;
         r0gdb_table->r0gdb_init_ptr = (void*) (MAKE_ADDR(r0gdb_init));
         r0gdb_table->r0gdb_kmalloc = (void*) (MAKE_ADDR(r0gdb_kmalloc));
