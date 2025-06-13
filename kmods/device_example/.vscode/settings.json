@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "param.h": "c",
+        "idt.h": "c",
+        "conf.h": "c",
+        "intrin.h": "c",
+        "500.h": "c",
+        "compare": "c",
+        "cstdint": "c",
+        "kernel.h": "c",
+        "specialreg.h": "c"
+    }
+}
