@@ -1,0 +1,180 @@
+
+Merging program properties
+
+Removed property 0xc0000002 to merge build/kernel.o (0x3) and build/int.o (not found)
+Removed property 0xc0000002 to merge build/kernel.o (not found) and build/main.o (0x3)
+
+Discarded input sections
+
+ .text          0x0000000000000000       0x38 build/int.o
+ .data          0x0000000000000000        0x0 build/int.o
+ .bss           0x0000000000000000        0x0 build/int.o
+ .text          0x0000000000000000        0x0 build/kernel.o
+ .data          0x0000000000000000        0x0 build/kernel.o
+ .bss           0x0000000000000000        0x0 build/kernel.o
+ .bss.kdata_address
+                0x0000000000000000        0x8 build/kernel.o
+ .comment       0x0000000000000000       0x2c build/kernel.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 build/kernel.o
+ .note.gnu.property
+                0x0000000000000000       0x20 build/kernel.o
+ .eh_frame      0x0000000000000000       0x48 build/kernel.o
+ .text          0x0000000000000000        0x0 build/main.o
+ .data          0x0000000000000000        0x0 build/main.o
+ .bss           0x0000000000000000        0x0 build/main.o
+ .text.memset   0x0000000000000000       0x18 build/main.o
+ .rodata.handle_int.str1.1
+                0x0000000000000000       0x14 build/main.o
+ .text.handle_int
+                0x0000000000000000       0x22 build/main.o
+ .comment       0x0000000000000000       0x2c build/main.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 build/main.o
+ .note.gnu.property
+                0x0000000000000000       0x20 build/main.o
+ .eh_frame      0x0000000000000000       0xd8 build/main.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD build/int.o
+LOAD build/kernel.o
+LOAD build/main.o
+
+.text           0x0000000000000000      0x1bc
+ *(.text.module_start)
+ .text.module_start
+                0x0000000000000000       0xea build/main.o
+                0x0000000000000000                module_start
+ *(.text*)
+ .text.get_kernel_base
+                0x00000000000000ea       0x1c build/kernel.o
+                0x00000000000000ea                get_kernel_base
+ .text.init_kernel
+                0x0000000000000106       0x4a build/kernel.o
+                0x0000000000000106                init_kernel
+ .text.mydev_open
+                0x0000000000000150       0x1b build/main.o
+ .text.mydev_close
+                0x000000000000016b       0x1b build/main.o
+ .text.mydev_write
+                0x0000000000000186       0x1b build/main.o
+ .text.mydev_read
+                0x00000000000001a1       0x1b build/main.o
+
+.plt            0x00000000000001c0        0x0
+ .plt           0x00000000000001c0        0x0 build/int.o
+
+.plt.got        0x00000000000001c0        0x0
+ .plt.got       0x00000000000001c0        0x0 build/int.o
+
+.rodata         0x00000000000001bc       0xc5
+ *(.rodata)
+ *(.rodata*)
+ .rodata.mydev_open.str1.1
+                0x00000000000001bc       0xc5 build/main.o
+                                         0x13 (size before relaxing)
+ .rodata.mydev_close.str1.1
+                0x0000000000000281       0x14 build/main.o
+ .rodata.mydev_write.str1.1
+                0x0000000000000281       0x14 build/main.o
+ .rodata.mydev_read.str1.1
+                0x0000000000000281       0x13 build/main.o
+ .rodata.module_start.str1.1
+                0x0000000000000281       0x77 build/main.o
+
+.gnu.version_d  0x0000000000000288        0x0
+ .gnu.version_d
+                0x0000000000000288        0x0 build/int.o
+
+.gnu.version    0x0000000000000282        0x0
+ .gnu.version   0x0000000000000282        0x0 build/int.o
+
+.gnu.version_r  0x0000000000000288        0x0
+ .gnu.version_r
+                0x0000000000000288        0x0 build/int.o
+
+.dynsym         0x0000000000000288       0x18
+ .dynsym        0x0000000000000288       0x18 build/int.o
+
+.dynstr         0x00000000000002a0        0x1
+ .dynstr        0x00000000000002a0        0x1 build/int.o
+
+.gnu.hash       0x00000000000002a8       0x1c
+ .gnu.hash      0x00000000000002a8       0x1c build/int.o
+
+.sframe         0x00000000000002c4        0x0
+ .sframe        0x00000000000002c4        0x0 build/int.o
+
+.eh_frame_hdr   0x00000000000002c4        0x0
+ .eh_frame_hdr  0x00000000000002c4        0x0 build/kernel.o
+
+.rela.dyn       0x00000000000002c8       0xd8
+ .rela.plt      0x00000000000002c8        0x0 build/int.o
+ .rela.got      0x00000000000002c8        0x0 build/int.o
+ .rela.bss      0x00000000000002c8        0x0 build/int.o
+ .rela.data.rel.ro
+                0x00000000000002c8        0x0 build/int.o
+ .rela.ifunc    0x00000000000002c8        0x0 build/int.o
+ .rela.data.rel.local.device_sw.0
+                0x00000000000002c8       0xd8 build/int.o
+
+.data
+ *(.data)
+
+.dynamic        0x00000000000003a0      0x110
+ .dynamic       0x00000000000003a0      0x110 build/int.o
+                0x00000000000003a0                _DYNAMIC
+
+.got            0x00000000000004b0        0x0
+ .got           0x00000000000004b0        0x0 build/int.o
+
+.got.plt        0x00000000000004b0        0x0
+ .got.plt       0x00000000000004b0        0x0 build/int.o
+
+.data.rel.ro    0x00000000000004b0        0x0
+ .data.rel.ro   0x00000000000004b0        0x0 build/int.o
+
+.data.rel.local.device_sw.0
+                0x00000000000004c0       0xb8
+ .data.rel.local.device_sw.0
+                0x00000000000004c0       0xb8 build/main.o
+
+.bss
+ *(.bss)
+
+.dynbss         0x0000000000000578        0x0
+ .dynbss        0x0000000000000578        0x0 build/int.o
+
+.bss.kdestroy_dev
+                0x0000000000000578        0x8
+ .bss.kdestroy_dev
+                0x0000000000000578        0x8 build/kernel.o
+                0x0000000000000578                kdestroy_dev
+
+.bss.kmake_dev  0x0000000000000580        0x8
+ .bss.kmake_dev
+                0x0000000000000580        0x8 build/kernel.o
+                0x0000000000000580                kmake_dev
+
+.bss.kprintf    0x0000000000000588        0x8
+ .bss.kprintf   0x0000000000000588        0x8 build/kernel.o
+                0x0000000000000588                kprintf
+
+.bss.kernel_base
+                0x0000000000000590        0x8
+ .bss.kernel_base
+                0x0000000000000590        0x8 build/kernel.o
+                0x0000000000000590                kernel_base
+
+/DISCARD/
+ *(.comment)
+ *(.note.GNU-stack)
+ *(.eh_frame)
+ *(.interp)
+OUTPUT(idt_experiments.elf elf64-x86-64)
