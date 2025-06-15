@@ -98,6 +98,8 @@ DEF(kproc_create, 0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -182,6 +184,8 @@ DEF(kproc_create, 0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -266,6 +270,8 @@ DEF(kernel_vmmap, 0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -350,6 +356,8 @@ DEF(kproc_create, -0x3565A0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -434,6 +442,8 @@ DEF(kproc_create, -0x3565A0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -518,6 +528,8 @@ DEF(kproc_create, 0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -602,6 +614,8 @@ DEF(kproc_create, 0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -689,9 +703,11 @@ DEF(utoken, 0x6506500)
 DEF(kmem_alloc, -0xc1ed0)
 DEF(kernel_vmmap, 0xd42b98)
 DEF(kproc_create, -0x35ebf0)
-DEF(kmem_alloc_rwx_fix, -0x70b963)
+DEF(kmem_alloc_rwx_fix, -0x70b94d)
 DEF(malloc_arena_fix_start, -0xa9ac2)
 DEF(malloc_arena_fix_end, malloc_arena_fix_start+6)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -782,6 +798,8 @@ DEF(kproc_create, 0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -872,6 +890,8 @@ DEF(kproc_create, -0x35E700)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -956,9 +976,12 @@ DEF(utoken, 0x6646778) //data 0x7286778
 DEF(kernel_vmmap, 0)
 DEF(kmem_alloc, -0xCD1E0)
 DEF(kproc_create, -0x372460)
-DEF(kmem_alloc_rwx_fix, 0)
-DEF(malloc_arena_fix_start, 0)
-DEF(malloc_arena_fix_end, 0)
+DEF(kmem_alloc_rwx_fix, -0x73e4dd)
+DEF(malloc_arena_fix_start, -0xb4da3)
+DEF(malloc_arena_fix_end, malloc_arena_fix_start+6)
+// DEF(cfi_check_fail, -0x7d8050)
+DEF(cfi_check_fail, -0x2a900)
+DEF(cfi_check_fail_lr, -0x7d803b)
 #include "offset_list.txt"
 END_FW()
 
@@ -1046,6 +1069,8 @@ DEF(kproc_create, -0x372460)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1131,6 +1156,8 @@ DEF(kproc_create, -0x372290)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1216,6 +1243,8 @@ DEF(kproc_create, -0x3714A0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1303,6 +1332,8 @@ DEF(kproc_create, -0x372DB0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1390,6 +1421,8 @@ DEF(kproc_create, -0x372DD0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1477,6 +1510,8 @@ DEF(kproc_create, -0x372B40)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1564,6 +1599,8 @@ DEF(kproc_create, -0x37B900)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1651,6 +1688,8 @@ DEF(kproc_create, -0x37B900)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1738,6 +1777,8 @@ DEF(kproc_create, -0x37B600)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1825,6 +1866,8 @@ DEF(kproc_create, -0x37B600)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1912,6 +1955,8 @@ DEF(kproc_create, -0x37B4C0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
@@ -1999,6 +2044,8 @@ DEF(kproc_create, -0x37B4C0)
 DEF(kmem_alloc_rwx_fix, 0)
 DEF(malloc_arena_fix_start, 0)
 DEF(malloc_arena_fix_end, 0)
+DEF(cfi_check_fail, 0)
+DEF(cfi_check_fail_lr, 0)
 #include "offset_list.txt"
 END_FW()
 
