@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "kernel.h": "c",
+        "pcpu.h": "c",
+        "conf.h": "c",
+        "cpuset.h": "c",
+        "intrin.h": "c",
+        "types.h": "c",
+        "cpufunc.h": "c",
+        "specialreg.h": "c"
+    }
+}
