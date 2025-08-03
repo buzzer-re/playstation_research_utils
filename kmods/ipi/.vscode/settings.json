@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "kernel.h": "c",
+        "apicvar.h": "c",
+        "intrin.h": "c",
+        "idt.h": "c"
+    }
+}
