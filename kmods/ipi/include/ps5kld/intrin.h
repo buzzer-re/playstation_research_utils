@@ -31,11 +31,20 @@ DEFINE_DR_RW(7)
 static inline __attribute__((always_inline)) uint64_t __readmsr(unsigned long __register) {
     unsigned long __edx;
     unsigned long __eax;
-    __asm__ volatile("rdmsr"
+    __asm__ volatile("wrmsr"
             : "=d"(__edx), "=a"(__eax)
             : "c"(__register));
     return (((uint64_t)__edx) << 32) | (uint64_t)__eax;
 }
+
+static inline __attribute__((always_inline)) void __writemsr(unsigned long __register, uint64_t __value) {
+    unsigned long __edx = (unsigned long)(__value >> 32);
+    unsigned long __eax = (unsigned long)(__value & 0xFFFFFFFF);
+    __asm__ volatile("wrmsr"
+            :
+            : "c"(__register), "d"(__edx), "a"(__eax));
+}
+
 
 static inline __attribute__((always_inline)) uint64_t __readcr0(void) {
     uint64_t cr0;
@@ -44,6 +53,15 @@ static inline __attribute__((always_inline)) uint64_t __readcr0(void) {
                     :
                     : "memory");
   return cr0;
+}
+
+static inline __attribute__((always_inline)) uint64_t __readcr3(void) {
+    uint64_t cr3;
+    __asm__ volatile("movq %%cr3, %0"
+                    : "=r"(cr3)
+                    :
+                    : "memory");
+  return cr3;
 }
 
 static inline __attribute__((always_inline)) uint64_t __readcr4(void) {

@@ -1,5 +1,7 @@
 .intel_syntax noprefix
 .global int_handler
+.global ipi_int_handler
+.extern handle_ipi_request
 .extern handle_int
 .extern justreturn
 
@@ -42,5 +44,16 @@
 .text
 
 
+ipi_int_handler:
+    SAVE_GP_REGISTERS
+    mov rdi, rsp
+    call handle_ipi_request
+    RESTORE_GP_REGISTERS
+    iretq
+
 int_handler:
-    int3
+    SAVE_GP_REGISTERS
+    mov rdi, rsp
+    call handle_int
+    RESTORE_GP_REGISTERS
+    iretq

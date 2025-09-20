@@ -3,6 +3,9 @@
         "kernel.h": "c",
         "apicvar.h": "c",
         "intrin.h": "c",
-        "idt.h": "c"
+        "idt.h": "c",
+        "specialreg.h": "c",
+        "param.h": "c",
+        "403.h": "c"
     }
 }
