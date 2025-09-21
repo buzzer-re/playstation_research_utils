@@ -86,15 +86,13 @@ uint64_t proc_get_pmap(pid_t pid, struct flat_pmap* pmap)
 
     if (!proc) return 0;
 
-    struct vmspace vmspace;
-
-    kernel_copyout((intptr_t) proc->p_vmspace, (void*) &vmspace, sizeof(vmspace));
     // the pmap seems to change between fw versions
     uint32_t fwver = get_fw_version();
 
     uint64_t pmap_offset = (fwver >= 0x700 ? 0x2E8 : 0x2E0);
     kernel_copyout((intptr_t) proc->p_vmspace + pmap_offset, pmap, sizeof(struct flat_pmap));
 
+    free(proc);
 
     return 0;
 }
