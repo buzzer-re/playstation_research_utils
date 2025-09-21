@@ -1,4 +1,15 @@
 #include "../include/proc.h"
+#include <sys/sysctl.h>
+
+uint32_t get_fw_version(void)
+{
+    int mib[2] = {1, 46};
+    unsigned long size = sizeof(mib);
+    unsigned int version = 0;
+    sysctl(mib, 2, &version, &size, 0, 0);
+    return version >> 16;
+}
+
 
 struct proc* find_proc_by_name(const char* proc_name)
 {
@@ -79,7 +90,7 @@ uint64_t proc_get_pmap(pid_t pid, struct flat_pmap* pmap)
 
     kernel_copyout((intptr_t) proc->p_vmspace, (void*) &vmspace, sizeof(vmspace));
     // the pmap seems to change between fw versions
-    uint32_t fwver = 0x500;
+    uint32_t fwver = get_fw_version();
 
     uint64_t pmap_offset = (fwver >= 0x700 ? 0x2E8 : 0x2E0);
     kernel_copyout((intptr_t) proc->p_vmspace + pmap_offset, pmap, sizeof(struct flat_pmap));
