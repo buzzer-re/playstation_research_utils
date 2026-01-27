@@ -1,4 +1,7 @@
 *.elf
+uelf
+kelf
+*.a
 *.elf.*
 *.map
 *.o

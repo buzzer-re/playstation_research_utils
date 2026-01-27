@@ -966,7 +966,7 @@ DEF(utoken, 0x6646778) //data 0x7286778
 DEF(kernel_vmmap, 0)
 DEF(kmem_alloc, -0xCD1E0)
 DEF(kproc_create, -0x372460)
-DEF(kmem_alloc_rwx_fix, -0x73e4dd)
+DEF(kmem_alloc_rwx_fix, -0x73e4f3)
 DEF(malloc_arena_fix_start, -0xb4da3)
 DEF(malloc_arena_fix_end, malloc_arena_fix_start+6)
 #include "offset_list.txt"
@@ -1489,8 +1489,8 @@ DEF(utoken, 0x6596978) //data 0x71F6978
 DEF(kernel_vmmap, 0)
 DEF(kmem_alloc, -0xC2440)
 DEF(kproc_create, -0x372B40)
-DEF(kmem_alloc_rwx_fix, 0)
-DEF(malloc_arena_fix_start, 0)
+DEF(kmem_alloc_rwx_fix, -0x74e681)
+DEF(malloc_arena_fix_start, -0xa9cf3)
 DEF(malloc_arena_fix_end, 0)
 
 #include "offset_list.txt"
