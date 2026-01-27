@@ -14,7 +14,7 @@
 # along with this program; see the file COPYING. If not see
 # <http://www.gnu.org/licenses/>.
 
-PS5_HOST ?= ps5
+PS5_HOST ?= PS5
 PS5_PORT ?= 9021
 
 ifdef PS5_PAYLOAD_SDK
@@ -27,9 +27,9 @@ CFLAGS := -Wall -Werror
 
 all: kstuff.elf
 
-payload_bin.c: ../ps5-kstuff/payload.bin 
+payload_bin.c:  
 	make -C ../ps5-kstuff/
-	xxd -i $^ > $@
+	xxd -i ../ps5-kstuff/payload.bin > $@
 
 kstuff.elf: payload_bin.c main.c sqlite_triggers.c
 	$(CC) -o $@ main.c sqlite_triggers.c -lsqlite3
@@ -37,6 +37,8 @@ kstuff.elf: payload_bin.c main.c sqlite_triggers.c
 	
 clean:
 	rm -f payload_bin.c *.o *.elf
+	@make -C ../ps5-kstuff/ clean
+	@make -C ../ps5-kstuff/prosper0gdb clean
 
 test: kstuff.elf
 	$(PS5_DEPLOY) -h $(PS5_HOST) -p $(PS5_PORT) $^

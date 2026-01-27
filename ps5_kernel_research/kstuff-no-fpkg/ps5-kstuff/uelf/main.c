@@ -188,6 +188,7 @@ void main(uint64_t just_return)
     regs[RDX] = jr_frame[2];
     regs[RCX] = jr_frame[3];
     regs[RAX] = jr_frame[4];
+
     handle(regs);
     copy_to_kernel(trap_frame, regs, sizeof(regs));
 }

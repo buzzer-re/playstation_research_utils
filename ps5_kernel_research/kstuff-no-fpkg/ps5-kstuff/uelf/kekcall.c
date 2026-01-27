@@ -38,13 +38,17 @@ int try_handle_kernel_fix_trap(uint64_t* regs)
 {
     if (regs[RIP] == (uint64_t) malloc_arena_fix_start)
     {
+        LOG("Hit first rwx breakpoint\n");
+
         // pretend that the system does not have memory backed, will make it ask for more
         regs[RIP] = (uint64_t) malloc_arena_fix_end;
         return 1;
     }
     else if (regs[RIP] == (uint64_t) kmem_alloc_rwx_fix)
     {
-        regs[RCX] = 7; // rwx
+        LOG("Replacing it to RWX\n");
+        uelf_write_logf("Stopped at address %lx\n", regs[RIP]);
+        regs[RCX] = (regs[RCX] & 0xffffffff00000000) | 7; // mov ecx, 7 
         regs[RIP] += 5;
         return 1;
     }
@@ -104,7 +108,8 @@ int handle_kekcall(uint64_t* regs, uint64_t* args, uint32_t nr)
         regs[RIP] = (uint64_t)copyin;
     }
     else if (nr == 6)
-    {
+    {   
+        LOG("Handling kmalloc kekcall\n");
         //
         // malloc with rwx
         //
@@ -119,6 +124,7 @@ int handle_kekcall(uint64_t* regs, uint64_t* args, uint32_t nr)
     else if (nr == 7)
     {
         // kproc_create
+        printf("Calling kproc_create on address %lx\n", args[RDI]);
         kpoke64(regs[RDI]+td_retval, 0);
         regs[RDI] = args[RDI];
         regs[RSI] = args[RSI];
